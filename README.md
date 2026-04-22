@@ -1,0 +1,1 @@
+2nd solo project on making a GitHub Activity Digest Emailer, where users can star their favorite repo and get automated update emails. 
