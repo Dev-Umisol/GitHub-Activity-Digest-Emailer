@@ -10,3 +10,6 @@ class UserResponse(BaseModel):
     user_name: str
     email: str
 
+# Model for user login request
+class UserLogin(BaseModel):
+    code: str
