@@ -13,3 +13,8 @@ class UserResponse(BaseModel):
 # Model for user login request
 class UserLogin(BaseModel):
     code: str
+
+# Model for user preferences
+class UserPreferences(BaseModel):
+    frequency: str
+    
