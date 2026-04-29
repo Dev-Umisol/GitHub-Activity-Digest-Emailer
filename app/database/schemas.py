@@ -17,4 +17,7 @@ class UserLogin(BaseModel):
 # Model for user preferences
 class UserPreferences(BaseModel):
     frequency: str
-    
+
+# Model for adding a watched repository
+class WatchedRepoAdd(BaseModel):
+    repo_name: str
