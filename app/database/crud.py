@@ -40,7 +40,17 @@ def get_preferences(db: Session, user_id: int) -> models.UserPreferences | None:
 
 # This function updates a user's preferences, allowing them to change their notification settings
 def update_preferences(db: Session, user_id: int, frequency: str) -> models.UserPreferences | None:
-    pass
+    preferences = db.query(models.UserPreferences).filter(models.UserPreferences.user_id == user_id).first()
+    
+    if not preferences:
+        raise HTTPException(status_code=404, detail="User preferences not found")
+    
+    preferences.frequency = frequency # type: ignore
+    
+    db.commit()
+    db.refresh(preferences)
+    
+    return preferences
 
 # This function updates the last run time for a user's preferences, which can be used to determine when to send the next notification
 def update_last_run_at(db: Session, user_id: int, last_run_at) -> models.UserPreferences | None:
