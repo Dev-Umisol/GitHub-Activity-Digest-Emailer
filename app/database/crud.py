@@ -36,7 +36,7 @@ def create_preferences(db: Session, user_id: int) -> models.UserPreferences | No
 
 # This function retrieves a user's preferences, which can be used to determine how often they want to receive notifications
 def get_preferences(db: Session, user_id: int) -> models.UserPreferences | None:
-    pass
+    return db.query(models.UserPreferences).filter(models.UserPreferences.user_id == user_id).first()
 
 # This function updates a user's preferences, allowing them to change their notification settings
 def update_preferences(db: Session, user_id: int, frequency: str) -> models.UserPreferences | None:
