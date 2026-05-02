@@ -21,7 +21,18 @@ def get_or_create_user(db: Session, github_id: int, user_name: str, email: str) 
 # UserPreferences CRUD Operations
 # This function creates a new preferences entry for a user, which can be used to store their notification settings
 def create_preferences(db: Session, user_id: int) -> models.UserPreferences | None:
-    pass
+    preferences = db.query(models.UserPreferences).filter(models.UserPreferences.user_id == user_id).first()
+    
+    if preferences:
+        return preferences
+    
+    new_preferences = models.UserPreferences(user_id=user_id, frequency="daily")
+    
+    db.add(new_preferences)
+    db.commit()
+    db.refresh(new_preferences)
+    
+    return new_preferences
 
 # This function retrieves a user's preferences, which can be used to determine how often they want to receive notifications
 def get_preferences(db: Session, user_id: int) -> models.UserPreferences | None:
