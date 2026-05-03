@@ -54,7 +54,17 @@ def update_preferences(db: Session, user_id: int, frequency: str) -> models.User
 
 # This function updates the last run time for a user's preferences, which can be used to determine when to send the next notification
 def update_last_run_at(db: Session, user_id: int, last_run_at) -> models.UserPreferences | None:
-    pass
+    last_run = db.query(models.UserPreferences).filter(models.UserPreferences.user_id == user_id).first()
+    
+    if not last_run:
+        raise HTTPException(status_code=404, detail="User preferences not found")
+    
+    last_run.last_run_at = last_run_at # type: ignore
+        
+    db.commit()
+    db.refresh(last_run)
+        
+    return last_run
 
 # WatchedRepos CRUD Operations
 # This function adds a repository to a user's watch list, allowing them to receive notifications about updates to that repository
