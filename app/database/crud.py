@@ -89,7 +89,13 @@ def get_repo(db: Session, user_id: int, repo_name: str) -> models.WatchedRepos |
 
 # This function deletes a repository from a user's watch list, which can be used to stop notifications about updates to that repository
 def delete_repo(db: Session, user_id: int, repo_name: str) -> None:
-    pass
+    repo = db.query(models.WatchedRepos).filter(models.WatchedRepos.user_id == user_id, models.WatchedRepos.repo_name == repo_name).first()
+    
+    if not repo:
+        raise HTTPException(status_code=404, detail="Repository not found in watch list")
+    
+    db.delete(repo)
+    db.commit()
 
 # GithubTokens CRUD Operations
 # This function creates a new token entry for a user, which can be used to store their GitHub OAuth tokens for accessing the GitHub API
