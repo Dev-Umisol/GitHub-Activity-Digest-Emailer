@@ -69,7 +69,19 @@ def update_last_run_at(db: Session, user_id: int, last_run_at) -> models.UserPre
 # WatchedRepos CRUD Operations
 # This function adds a repository to a user's watch list, allowing them to receive notifications about updates to that repository
 def add_repo(db: Session, user_id: int, repo_name: str) -> models.WatchedRepos | None:
-    pass
+    existing_repo = db.query(models.WatchedRepos).filter(models.WatchedRepos.user_id == user_id, models.WatchedRepos.repo_name == repo_name).first()
+    
+    if existing_repo:
+        return existing_repo
+    
+    new_repo = models.WatchedRepos(user_id=user_id, repo_name=repo_name)
+    
+    db.add(new_repo)
+    db.commit()
+    db.refresh(new_repo)
+    
+    return new_repo
+        
 
 # This function retrieves a specific repository from a user's watch list, which can be used to check if they are watching that repository
 def get_repo(db: Session, user_id: int, repo_name: str) -> models.WatchedRepos | None:
