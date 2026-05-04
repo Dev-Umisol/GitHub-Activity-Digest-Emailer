@@ -85,7 +85,7 @@ def add_repo(db: Session, user_id: int, repo_name: str) -> models.WatchedRepos |
 
 # This function retrieves a specific repository from a user's watch list, which can be used to check if they are watching that repository
 def get_repo(db: Session, user_id: int, repo_name: str) -> models.WatchedRepos | None:
-    pass
+    return db.query(models.WatchedRepos).filter(models.WatchedRepos.user_id == user_id, models.WatchedRepos.repo_name == repo_name).first()
 
 # This function deletes a repository from a user's watch list, which can be used to stop notifications about updates to that repository
 def delete_repo(db: Session, user_id: int, repo_name: str) -> None:
