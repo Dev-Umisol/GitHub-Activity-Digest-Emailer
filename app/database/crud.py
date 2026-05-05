@@ -113,7 +113,7 @@ def create_token(db: Session, user_id: int, access_token: str, refresh_token: st
 
 # This function retrieves a user's token, which can be used to access the GitHub API on their behalf
 def retrieve_token(db: Session, user_id: int) -> models.GithubTokens | None:
-    pass
+    return db.query(models.GithubTokens).filter(models.GithubTokens.user_id == user_id).first()
 
 # This function updates a user's token, allowing us to refresh their GitHub OAuth tokens when they expire
 def update_token(db: Session, user_id: int, access_token: str, refresh_token: str, expires_at) -> models.GithubTokens | None:
