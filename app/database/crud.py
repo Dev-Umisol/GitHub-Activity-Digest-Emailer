@@ -100,7 +100,16 @@ def delete_repo(db: Session, user_id: int, repo_name: str) -> None:
 # GithubTokens CRUD Operations
 # This function creates a new token entry for a user, which can be used to store their GitHub OAuth tokens for accessing the GitHub API
 def create_token(db: Session, user_id: int, access_token: str, refresh_token: str, expires_at) -> models.GithubTokens | None:
-    pass
+    token = db.query(models.GithubTokens).filter(models.GithubTokens.user_id == user_id).first()
+    
+    if token:
+        return token
+    
+    new_token = models.GithubTokens(user_id=user_id, access_token=access_token, refresh_token=refresh_token, expires_at=expires_at)
+    
+    db.add(new_token)
+    db.commit()
+    db.refresh(new_token)
 
 # This function retrieves a user's token, which can be used to access the GitHub API on their behalf
 def retrieve_token(db: Session, user_id: int) -> models.GithubTokens | None:
