@@ -85,16 +85,31 @@ def add_repo(db: Session, user_id: int, repo_name: str) -> models.WatchedRepos |
 
 # This function retrieves a specific repository from a user's watch list, which can be used to check if they are watching that repository
 def get_repo(db: Session, user_id: int, repo_name: str) -> models.WatchedRepos | None:
-    pass
+    return db.query(models.WatchedRepos).filter(models.WatchedRepos.user_id == user_id, models.WatchedRepos.repo_name == repo_name).first()
 
 # This function deletes a repository from a user's watch list, which can be used to stop notifications about updates to that repository
 def delete_repo(db: Session, user_id: int, repo_name: str) -> None:
-    pass
+    repo = db.query(models.WatchedRepos).filter(models.WatchedRepos.user_id == user_id, models.WatchedRepos.repo_name == repo_name).first()
+    
+    if not repo:
+        raise HTTPException(status_code=404, detail="Repository not found in watch list")
+    
+    db.delete(repo)
+    db.commit()
 
 # GithubTokens CRUD Operations
 # This function creates a new token entry for a user, which can be used to store their GitHub OAuth tokens for accessing the GitHub API
 def create_token(db: Session, user_id: int, access_token: str, refresh_token: str, expires_at) -> models.GithubTokens | None:
-    pass
+    token = db.query(models.GithubTokens).filter(models.GithubTokens.user_id == user_id).first()
+    
+    if token:
+        return token
+    
+    new_token = models.GithubTokens(user_id=user_id, access_token=access_token, refresh_token=refresh_token, expires_at=expires_at)
+    
+    db.add(new_token)
+    db.commit()
+    db.refresh(new_token)
 
 # This function retrieves a user's token, which can be used to access the GitHub API on their behalf
 def retrieve_token(db: Session, user_id: int) -> models.GithubTokens | None:
