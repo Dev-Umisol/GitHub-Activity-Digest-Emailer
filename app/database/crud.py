@@ -117,4 +117,16 @@ def retrieve_token(db: Session, user_id: int) -> models.GithubTokens | None:
 
 # This function updates a user's token, allowing us to refresh their GitHub OAuth tokens when they expire
 def update_token(db: Session, user_id: int, access_token: str, refresh_token: str, expires_at) -> models.GithubTokens | None:
-    pass
+    token = db.query(models.GithubTokens).filter(models.GithubTokens.user_id == user_id).first()
+    
+    if not token:
+        raise HTTPException(status_code=404, detail="Token not found for user")
+    
+    token.access_token = access_token # type: ignore
+    token.refresh_token = refresh_token # type: ignore
+    token.expires_at = expires_at # type: ignore
+    
+    db.commit()
+    db.refresh(token)
+    
+    return token
