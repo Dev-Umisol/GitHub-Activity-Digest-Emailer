@@ -19,8 +19,8 @@ class GithubTokens(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     access_token = Column(String, nullable=False)
-    refresh_token = Column(String, nullable=False)
-    expires_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    refresh_token = Column(String, nullable=True)
+    expires_at = Column(DateTime, nullable=False)
 
 # This table will store the repositories that users are watching for updates
 class WatchedRepos(Base):
