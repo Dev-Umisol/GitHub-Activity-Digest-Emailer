@@ -9,6 +9,13 @@ class UserResponse(BaseModel):
     github_id: int
     user_name: str
     email: str
+    
+class UserPreferencesResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    user_id: int
+    frequency: str
+    last_run_at: datetime
 
 # Model for user login request
 class UserLogin(BaseModel):
@@ -20,4 +27,11 @@ class UserPreferences(BaseModel):
 
 # Model for adding a watched repository
 class WatchedRepoAdd(BaseModel):
+    repo_name: str
+    
+
+class WatchedRepoResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    user_id: int
     repo_name: str
