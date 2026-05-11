@@ -20,7 +20,6 @@ if SECRET_KEY is None:
 
 router = APIRouter()
 
-#TODO FIX
 @router.get("/auth/redirect")
 async def auth_redirect(request: Request):
     # Generate a random state parameter for CSRF protection
@@ -33,7 +32,10 @@ async def auth_redirect(request: Request):
     params = {
         "client_id": GITHUB_CLIENT_ID,
         "redirect_uri": request.url_for("auth_callback"),
-        "scope": "read:user user:email",
+        "scope": "read:user user:email repo",
         "state": state
     }
     github_auth_url = f"https://github.com/login/oauth/authorize?{urlencode(params)}"
+    
+    return RedirectResponse(github_auth_url)
+
