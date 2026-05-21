@@ -39,3 +39,14 @@ async def auth_redirect(request: Request):
     
     return RedirectResponse(github_auth_url)
 
+# This endpoint will be called by GitHub after the user authorizes the application
+@router.get("/auth/callback")
+async def auth_callback(request: Request, code: str, state: str):
+    # Verify the state parameter to prevent CSRF attacks
+    if state != request.session.get("oauth_state"):
+        return {"error": "Invalid state parameter"}
+
+    # Exchange the authorization code for an access token
+    
+
+    return {"message": "Authentication successful", "code": code}
